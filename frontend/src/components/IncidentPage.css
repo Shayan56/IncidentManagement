@@ -1,0 +1,91 @@
+/* Main container for the Incident Page */
+.incident-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f7fc;
+  }
+  
+  /* Form container styling */
+  .incident-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  /* Styling the title */
+  .incident-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* General input field styling */
+  .incident-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+  /* Focus effect for input fields */
+  .incident-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Button styling */
+  .submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Message styling */
+  .error-message {
+    color: red;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: green;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  /* Optional: Add a subtle fade effect */
+  .incident-container {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Incident Dashboard</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Incident Management Dashboard</h1>
+    <button onclick="logout()">Logout</button>
+
+    <section>
+      <h2>Create Incident</h2>
+      <form id="createIncidentForm">
+        <label for="details">Incident Details:</label>
+        <textarea id="details" rows="4" required></textarea>
+
+        <label for="priority">Priority:</label>
+        <select id="priority" required>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <button type="submit">Create Incident</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Search Incident</h2>
+      <form id="searchIncidentForm">
+        <label for="incidentId">Incident ID:</label>
+        <input type="text" id="incidentId" required>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Your Incidents</h2>
+      <div id="incidentList"></div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Fetch and display incidents
+    async function fetchIncidents() {
+      const incidents = await apiRequest("/incidents", "GET");
+      const incidentList = document.getElementById("incidentList");
+      incidentList.innerHTML = "";
+
+      if (incidents.length === 0) {
+        incidentList.innerHTML = "<p>No incidents found.</p>";
+        return;
+      }
+
+      incidents.forEach((incident) => {
+        const card = document.createElement("div");
+        card.className = "incident-card";
+
+        card.innerHTML = `
+          <h3>Incident ID: ${incident.id}</h3>
+          <p><strong>Details:</strong> ${incident.details}</p>
+          <p><strong>Priority:</strong> ${incident.priority}</p>
+          <p><strong>Status:</strong> ${incident.status}</p>
+          <p><strong>Reported At:</strong> ${new Date(incident.reportedAt).toLocaleString()}</p>
+          ${
+            incident.status !== "Closed"
+              ? `<button onclick="editIncident('${incident.id}')">Edit</button>`
+              : ""
+          }
+        `;
+        incidentList.appendChild(card);
+      });
+    }
+
+    // Create Incident
+    const createIncidentForm = document.getElementById("createIncidentForm");
+    createIncidentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const details = document.getElementById("details").value;
+      const priority = document.getElementById("priority").value;
+
+      const response = await apiRequest("/incidents", "POST", { details, priority });
+      if (response.id) {
+        alert("Incident created successfully!");
+        createIncidentForm.reset();
+        fetchIncidents();
+      } else {
+        alert(response.message || "Failed to create incident.");
+      }
+    });
+
+    // Search Incident
+    const searchIncidentForm = document.getElementById("searchIncidentForm");
+    searchIncidentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const incidentId = document.getElementById("incidentId").value;
+
+      const response = await apiRequest(`/incidents/${incidentId}`, "GET");
+      if (response.id) {
+        alert(`
+          Incident Found:
+          ID: ${response.id}
+          Details: ${response.details}
+          Priority: ${response.priority}
+          Status: ${response.status}
+        `);
+      } else {
+        alert(response.message || "Incident not found.");
+      }
+    });
+
+    // Edit Incident
+    async function editIncident(incidentId) {
+      const newDetails = prompt("Enter new incident details:");
+      const newPriority = prompt("Enter new priority (High, Medium, Low):");
+
+      if (newDetails && newPriority) {
+        const response = await apiRequest(`/incidents/${incidentId}`, "PUT", {
+          details: newDetails,
+          priority: newPriority,
+        });
+
+        if (response.success) {
+          alert("Incident updated successfully!");
+          fetchIncidents();
+        } else {
+          alert(response.message || "Failed to update incident.");
+        }
+      }
+    }
+
+    // Initial fetch
+    fetchIncidents();
+  </script>
+</body>
+</html>

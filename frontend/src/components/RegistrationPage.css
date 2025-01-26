@@ -1,0 +1,81 @@
+/* Main container for the Registration Page */
+.registration-container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading style */
+.registration-heading {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Error message styling */
+.error-message {
+    color: #f44336;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+/* Form layout and spacing */
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input field styling */
+.registration-input {
+    margin-bottom: 15px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus effect for input fields */
+.registration-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Button styling */
+.submit-button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+/* Button hover effect */
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+/* Button disabled state */
+.submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Add a smooth fade-in animation */
+.registration-container {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
