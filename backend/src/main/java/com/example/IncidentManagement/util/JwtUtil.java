@@ -1,5 +1,6 @@
 package com.example.IncidentManagement.util;
 
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,11 +10,16 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Base64;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "your_super_secure_secret_key"; // Use a strong secret key
+    private static final String SECRET_KEY = Base64.getEncoder()
+            .encodeToString(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
+
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour expiration
 
     /**
@@ -97,8 +103,7 @@ public class JwtUtil {
         }
     }
 
-    // Get the signing key for token creation and validation
     private Key getSigningKey() {
-        return new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName()); // Convert secret key to signing key
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
     }
 }

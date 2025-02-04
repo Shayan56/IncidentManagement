@@ -3,6 +3,7 @@ package com.example.IncidentManagement.service;
 import com.example.IncidentManagement.model.User;
 import com.example.IncidentManagement.repository.UserRepository;
 import com.example.IncidentManagement.util.JwtUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +19,36 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Register a new user
+    @Transactional
     public User registerUser(User user) {
-        return userRepository.save(user); // Save the user to the database
+        // Ensure new users do not have an ID
+        if (user.getId() != null) {
+            throw new IllegalArgumentException("New users should not have an ID");
+        }
+
+        // Check if a user with the same email already exists
+        User existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("A user with this email already exists");
+        }
+
+        // Save the new user
+        return userRepository.save(user);
     }
 
-    // Login user and return a JWT token
     public String login(User user) {
         User existingUser = userRepository.findByEmail(user.getEmail());
-        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
-            List<String> roles = Arrays.asList("USER"); // Assign default roles; customize as needed
-            return jwtUtil.generateToken(user.getEmail(), roles); // Generate and return the JWT token
+
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User not found");  // Handle missing user properly
         }
-        return "Invalid credentials"; // Return error message if credentials are invalid
+
+        if (!existingUser.getPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid credentials");  // Better error message
+        }
+
+        List<String> roles = Arrays.asList("USER");
+        return jwtUtil.generateToken(user.getEmail(), roles);
     }
 
     // Password reset functionality (forgot-password flow)
